@@ -1,0 +1,17 @@
+.gitignore
+Changes
+MANIFEST
+Makefile.PL
+README
+lib/LSI/MegaSAS.pm
+bin/megasas-list
+t/00-load.t
+t/01-enclosure-info.t
+t/02-adapter-info.t
+t/03-physical-info.t
+t/04-logical-info.t
+t/05-multi-adapters.t
+t/10-logical-failure.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t

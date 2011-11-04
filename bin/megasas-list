@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+use LSI::MegaSAS;
+
+my $m = LSI::MegaSAS->new();
+
+for ($m->logical_drive_list) {
+	print $_, "\n";
+}
