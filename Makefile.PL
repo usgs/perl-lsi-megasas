@@ -7,6 +7,7 @@ WriteMakefile(
     AUTHOR              => q{Ken Dreyer <kdreyer@usgs.gov>},
     VERSION_FROM        => 'lib/LSI/MegaSAS.pm',
     ABSTRACT_FROM       => 'lib/LSI/MegaSAS.pm',
+    EXE_FILES           => [ 'bin/megasas-list' ],
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'public domain')
       : ()),
