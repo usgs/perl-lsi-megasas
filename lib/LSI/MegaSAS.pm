@@ -109,6 +109,41 @@ sub enclosure_failures {
 	return $self->enclosure_list(1);
 }
 
+# Return all drives' temperatures, in Fahrenheit degrees
+# Returns: hashref
+sub drive_temperatures {
+	my $self = shift;
+	my $data = $self->physical_drive_info;
+	my $temps;
+	# Iterate through each adapter
+	for my $adp (keys(%$data)) {
+		my $adp_data = $data->{$adp};
+		# Iterate through each enclosure
+		for my $enc (keys(%$adp_data)) {
+			my $enc_data = $data->{$adp}->{$enc};
+			# Iterate through each drive
+			for my $drive (keys(%$enc_data)) {
+				# Get the raw string from megacli.
+				my $t = $enc_data->{$drive}->{'Drive Temperature'};
+				# Try to parse the temperature string.
+				if ($t =~ /([\d\.]+)\s*F/) {
+					# We already have a Fahrenheit value, great.
+					$t = $1;
+				} elsif ($t =~ /([\d\.]+)\s*C/) {
+					# Convert from a Celsius value.
+					$t = ($1*9/5)+32;
+				} else {
+					# We couldn't find anything intelligible.
+					$t = undef;
+				}
+				# Store this value.
+				$temps->{$adp}->{$enc}->{$drive} = $t;
+			}
+		}
+	}
+	return $temps;
+}
+
 # Check enclosure status.
 # Returns: hashref
 sub enclosure_info {
@@ -365,11 +400,11 @@ These methods are useful for monitoring programs.
 
 =head2 logical_drive_list
 
-Returns a textual list of all logical drives.
+Returns a textual list of all logical drives. (This function takes arguments, but please do not rely on this behavior.)
 
 =head2 enclosure_list
 
-Returns a textual list of all enclosures.
+Returns a textual list of all enclosures. (This function takes arguments, but please do not rely on this behavior.)
 
 =head2 logical_drive_failures
 
@@ -381,9 +416,19 @@ The returned text will start numbering adapters at #1. See the L</"ADAPTER NUMBE
 
 Returns a textual list of failed enclosures. The function returns undef if there are no failed enclosures. I've never seen this happen so I don't even know if it's possible for these to fail.
 
+=head2 drive_temperatures
+
+Returns the temperature of each drive, in Fahrenheit degrees. The function returns undef if there are no degraded or failed logical drives.
+
+ $megasas->drive_temperatures()
+
+You can find enclosure IDs with the physical_drive_info() function. For example, the following code would give you a list of all enclosure IDs on the first adapter. 
+
+ @enclosure_ids = keys($megasas->physical_drive_info()->{0})
+
 =head1 DATA METHODS
 
-These methods allow you to access the raw data from MegaCli.
+These methods allow you to access the raw data from MegaCli. This module does no post-processing with these functions; it merely assembles the data into hashrefs.
 
 =head2 enclosure_info
 
