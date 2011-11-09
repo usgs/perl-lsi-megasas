@@ -11,7 +11,8 @@ sub new {
 	my $class = shift;
 	my $self = {};
 	# Set the MegaCli binary path manually, if one was provided.
-	my $megacli = shift;
+	my $args = shift;
+	my $megacli = $args->{'megacli'};
 	my @possible_paths = (
 		# user-specified.
 		$megacli,
@@ -31,6 +32,7 @@ sub new {
 	# find anything useful in the above loop. I've chosen to make this a
 	# non-fatal error, until _run_megacli() is called, in order to support
 	# running the test suite on computers where MegaCli is not installed.
+	$self->{'sudo'} = $args->{'sudo'};
 	bless($self, $class);
 	return $self;
 }
@@ -300,11 +302,17 @@ sub _run_megacli {
 	if ($ENV{'TEST_MEGACLI'}) {
 		return $ENV{'TEST_MEGACLI_OUTPUT'};
 	}
+	# Sanity check that we have a MegaCli.
 	if (!$self->{'megacli'} || !-x $self->{'megacli'}) {
 		die("No MegaCli binary was found on the system. Please point to the binary when instantiating this module.\n");
 	}
-	my $output = `$self->{'megacli'} $args -NoLog`;
-	return $output;
+	# Assemble the command.
+	my $cmd = "$self->{'megacli'} $args -NoLog";
+	# Optional sudo.
+	if ($self->{'sudo'}) {
+		$cmd = 'sudo '.$cmd;
+	}
+	return scalar `$cmd`;
 }
 
 1;
@@ -323,6 +331,8 @@ Use this module to determine the status of your LSI MegaRAID arrays on Linux.
 
     my $m = LSI::MegaSAS->new();
 
+    # Access the raw data from MegaCli:
+
     # Find the status of enclosure 0 on the first adapter.
     my $enclosures = $m->enclosure_info();
     print $enclosures->{0}->{0}->{'Status'}
@@ -338,12 +348,20 @@ Use this module to determine the status of your LSI MegaRAID arrays on Linux.
     print $enclosures->{1}->{0}->{'State'}
     # prints "Optimal" or "Degraded".
 
+    # Convenience functions for monitoring:
+
+    # Get a human-readable summary of all logical drives.
+    my @drives =   $m->logical_drive_list;
+    
+    # Find array anomalies.
+    my @failures = $m->logical_drive_failures;
+    if(@failures) {
     ...
 
 
 =head1 DESCRIPTION
 
-LSI has published a Linux tool called "MegaCli". This tool reports the status of MegaRAID arrays.
+LSI has published a Linux tool called "MegaCli". This tool reports the status of MegaRAID disk arrays.
 
 This module is a Perl wrapper around that tool. Specifically, this module gives information on the physical enclosures, the physical drives, and the logical drives. 
 
@@ -392,11 +410,18 @@ A physical drive can belong to zero or more logical drives.
 
 =head2 new
 
-Returns a new LSI::MegaSAS object. The new() function takes one scalar argument: the full path to the MegaCli or MegaCli64 binary. If you do not specify any path, new() tries a few default paths to figure this out on its own.
+Returns a new LSI::MegaSAS object. The new() function takes a hashref argument.
+
+Set "megacli" to the full path to the MegaCli or MegaCli64 binary. If you do not specify any path, new() tries a few default paths to figure this out on its own.
+    my $m = LSI::MegaSAS->new({ megacli => '/usr/sbin/MegaCli'});
+
+Set "sudo" to true in order to run the MegaCli command through sudo. Be sure to authorize this in your sudoers file.
+
+    my $m = LSI::MegaSAS->new({ sudo => 1});
 
 =head1 CONVENIENCE METHODS
 
-These methods are useful for monitoring programs.
+These methods are useful for use in monitoring programs.
 
 =head2 logical_drive_list
 
@@ -420,9 +445,9 @@ Returns a textual list of failed enclosures. The function returns undef if there
 
 Returns the temperature of each drive, in Fahrenheit degrees. The function returns undef if there are no degraded or failed logical drives.
 
- $megasas->drive_temperatures()
+ $temps = $megasas->drive_temperatures()
 
-You can find enclosure IDs with the physical_drive_info() function. For example, the following code would give you a list of all enclosure IDs on the first adapter.
+You can find out enclosure IDs with the physical_drive_info() function. For example, the following code would give you a list of all the enclosure IDs on the first adapter.
 
  @enclosure_ids = keys($megasas->physical_drive_info()->{0})
 
@@ -478,5 +503,4 @@ L<http://exchange.nagios.org/directory/Plugins/Hardware/Storage-Systems/RAID-Con
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is in the public domain because it contains materials that originally came from the United States Geological Survey, an agency of the United States Department of Interior. For more information, see the official USGS copyright policy at http://www.usgs.gov/visual-id/credit_usgs.html#copyright
-
+This software is in the public domain because it contains materials that originally came from the United States Geological Survey, an agency of the United States Department of Interior. For more information, see the official USGS copyright policy at L<http://www.usgs.gov/visual-id/credit_usgs.html#copyright>
