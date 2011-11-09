@@ -2,7 +2,14 @@
 use warnings;
 use strict;
 
+use File::Basename;
 use LSI::MegaSAS;
+
+if (scalar getpwuid( $< ) ne 'root' ) {
+	# Assuming you haven't setuid on your MegaCli binary ;)
+	# ... that was a joke, don't do that.
+	die basename($0)," requires root privileges.\n";
+}
 
 my $m = LSI::MegaSAS->new();
 
