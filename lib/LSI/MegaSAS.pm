@@ -422,7 +422,7 @@ Returns the temperature of each drive, in Fahrenheit degrees. The function retur
 
  $megasas->drive_temperatures()
 
-You can find enclosure IDs with the physical_drive_info() function. For example, the following code would give you a list of all enclosure IDs on the first adapter. 
+You can find enclosure IDs with the physical_drive_info() function. For example, the following code would give you a list of all enclosure IDs on the first adapter.
 
  @enclosure_ids = keys($megasas->physical_drive_info()->{0})
 
