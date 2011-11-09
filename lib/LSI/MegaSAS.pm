@@ -91,7 +91,7 @@ sub enclosure_list {
 		my $adp_data = $data->{$adp};
 		for my $enc (sort(keys(%$adp_data))) {
 			my $enc_data = $adp_data->{$enc};
-			my $text = "Adapter $adp, Enclosure $enc: $enc_data->{'State'}";
+			my $text = "Adapter $adp, Enclosure $enc: $enc_data->{'Status'}";
 			push(@list, $text);
 			if ($enc_data->{'Status'} ne 'Normal') {
 				push(@failures, $text);
