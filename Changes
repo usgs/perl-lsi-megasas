@@ -1,5 +1,8 @@
 Revision history for LSI-MegaSAS
 
+1.01    Mar 30 2012
+        Fix tests to work on RHEL 5.
+
 1.00    Nov 3 2011
         First version.
 

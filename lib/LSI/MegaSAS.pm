@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Carp;
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 
 sub new {
@@ -488,7 +488,7 @@ The author of this Perl module chose to preserve this distinction. So the logica
 
 =head1 VERSION
 
-Version 1.00
+Version 1.01
 
 This module was developed using a MegaCli binary that "-help" proclaims to be "MegaCLI SAS RAID Management Tool  Ver 8.00.40 Oct 12, 2010"
 
