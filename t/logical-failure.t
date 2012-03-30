@@ -11,7 +11,16 @@ BEGIN {
 ";
 }
 
-my $m = new_ok('LSI::MegaSAS');
+my $m; # LSI::MegaSAS object
+
+#  new_ok() does not work in Test::More version 0.62 (CentOS 5).
+if (defined(&{'new_ok'})) {
+	$m = new_ok( 'LSI::MegaSAS' );
+} else {
+	#  use the older new() + isa_ok().
+	$m = LSI::MegaSAS->new();
+	isa_ok($m, 'LSI::MegaSAS');
+}
 
 $ENV{'TEST_MEGACLI'} = 1;
 # Sample output from -LDInfo -Lall -aALL
