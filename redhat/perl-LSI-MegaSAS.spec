@@ -1,5 +1,5 @@
 Name:           perl-LSI-MegaSAS
-Version:        1.01
+Version:        1.02
 Release:        1%{?dist}
 Summary:        Monitor LSI MegaRAID controllers
 License:        Public Domain
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Apr 17 2012 kdreyer@usgs.gov 1.02-1
+- New upstream version.
+
 * Fri Mar 30 2012 kdreyer@usgs.gov 1.01-1
 - New upstream version.
 
