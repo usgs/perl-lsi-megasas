@@ -16,21 +16,6 @@ perldoc command.
 
     perldoc LSI::MegaSAS
 
-You can also look for information at:
-
-    RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=LSI-MegaSAS
-
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/LSI-MegaSAS
-
-    CPAN Ratings
-        http://cpanratings.perl.org/d/LSI-MegaSAS
-
-    Search CPAN
-        http://search.cpan.org/dist/LSI-MegaSAS/
-
-
 LICENSE AND COPYRIGHT
 
 This software is in the public domain because it contains materials that originally came from the United States Geological Survey, an agency of the United States Department of Interior. For more information, see the official USGS copyright policy at http://www.usgs.gov/visual-id/credit_usgs.html#copyright
