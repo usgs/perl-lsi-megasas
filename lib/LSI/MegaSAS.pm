@@ -338,14 +338,9 @@ Use this module to determine the status of your LSI MegaRAID arrays on Linux.
     print $enclosures->{0}->{0}->{'Status'}
     # prints "Normal" or ... something else.
 
-    # Find the status of enclosure 0 on the first adapter.
-    my $enclosures = $m->enclosure_info();
-    print $enclosures->{0}->{0}->{'Status'}
-    # prints "Normal" or ... something else.
-
     # Find the status of logical drive 0 on the first adapter.
-    my $enclosures = $m->enclosure_info();
-    print $enclosures->{1}->{0}->{'State'}
+    my $logical_drives = $m->logical_drive_info();
+    print $elogical_drives->{1}->{0}->{'State'}
     # prints "Optimal" or "Degraded".
 
     # Convenience functions for monitoring:
@@ -488,7 +483,7 @@ The author of this Perl module chose to preserve this distinction. So the logica
 
 =head1 VERSION
 
-Version 1.01
+Version 1.02
 
 This module was developed using a MegaCli binary that "-help" proclaims to be "MegaCLI SAS RAID Management Tool  Ver 8.00.40 Oct 12, 2010"
 
