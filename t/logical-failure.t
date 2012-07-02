@@ -75,4 +75,4 @@ is(@failed, 1, 'logical_drive_failures() returns one failed drive');
 # Verify the failure information
 like($failed[0], qr/Adapter 1/i, 'failed drive is on the correct adapter ID');
 like($failed[0], qr/Logical Drive 1/i, 'failed drive is the correct drive ID');
-unlike($failed[0], qr/Optimal/i, 'failed drive is the correct drive ID');
+unlike($failed[0], qr/Optimal/i, 'failed drive is not listed as "optimal"');
