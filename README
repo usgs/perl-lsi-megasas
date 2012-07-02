@@ -1,4 +1,35 @@
-LSI-MegaSAS
+NAME
+    LSI::MegaSAS - Monitor LSI MegaRAID controllers
+
+SYNOPSIS
+    Use this module to determine the status of your LSI MegaRAID arrays on
+    Linux.
+
+        use LSI::MegaSAS;
+
+        my $m = LSI::MegaSAS->new();
+
+        # Convenience functions for monitoring:
+
+        # Get a human-readable summary of all logical drives.
+        my @drives =   $m->logical_drive_list;
+    
+        # Find array anomalies.
+        my @failures = $m->logical_drive_failures;
+        if(@failures) {
+        ...
+
+DESCRIPTION
+    LSI has published a Linux tool called "MegaCli". This tool reports the
+    status of MegaRAID disk arrays.
+
+    This module is a Perl wrapper around that tool. Specifically, this
+    module gives information on the physical enclosures, the physical
+    drives, and the logical drives.
+
+    At USGS we use this tool to track RAID failures in conjunction with
+    our Big Brother monitoring system. You could also use this module to
+    write a plugin for Nagios or any other monitoring system.
 
 INSTALLATION
 
@@ -11,7 +42,7 @@ To install this module, run the following commands:
 
 SUPPORT AND DOCUMENTATION
 
-After installing, you can find documentation for this module with the
+After installing, you can find more documentation for this module with the
 perldoc command.
 
     perldoc LSI::MegaSAS
